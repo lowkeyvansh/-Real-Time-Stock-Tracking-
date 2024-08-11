@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Real-Time Stock Tracker</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        h1 { text-align: center; }
+        .stock { margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <h1>Real-Time Stock Tracker</h1>
+    <div id="stock-data">
+        <h2>AAPL</h2>
+        <p id="price"></p>
+        <p id="time"></p>
+    </div>
+
+    <script>
+        async function fetchStockData() {
+            const response = await fetch('/stock/AAPL');
+            const data = await response.json();
+            document.getElementById('price').textContent = 'Price: $' + data.price;
+            document.getElementById('time').textContent = 'Time: ' + new Date(data.time).toLocaleString();
+        }
+
+        fetchStockData();
+        setInterval(fetchStockData, 60000);  // Update every minute
+    </script>
+</body>
+</html>
