@@ -1,0 +1,29 @@
+import sqlite3
+from stock_data_fetcher import get_stock_data
+import time
+
+conn = sqlite3.connect('stocks.db')
+cursor = conn.cursor()
+
+cursor.execute('''
+CREATE TABLE IF NOT EXISTS stock_data (
+    id INTEGER PRIMARY KEY,
+    ticker TEXT,
+    price REAL,
+    volume INTEGER,
+    time TEXT
+)
+''')
+
+def store_data(ticker):
+    data = get_stock_data(ticker)
+    cursor.execute('''
+        INSERT INTO stock_data (ticker, price, volume, time)
+        VALUES (?, ?, ?, ?)
+    ''', (data['ticker'], data['price'], data['volume'], data['time']))
+    conn.commit()
+
+if __name__ == "__main__":
+    while True:
+        store_data('AAPL')
+        time.sleep(60)  # Fetch and store data every minute
